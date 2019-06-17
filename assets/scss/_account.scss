@@ -1,0 +1,70 @@
+.containAccount{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+
+  .profileImgName{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    div:nth-child(1){
+      margin: 0 10px 0 0;
+    }
+    div:nth-child(2){
+      margin: 0 0 0 10px;
+    }
+  }
+}
+.displayNoneMobile{
+  display: block;
+}
+.dFlexBetween{
+  display: flex;
+  justify-content: space-between;
+}
+@media all and (max-width: 465px){
+  .displayNoneMobile{
+    display: none;
+  }
+}
+@media all and (max-width: 579px){
+  .divMiddle{
+    flex-direction: column!important;
+
+    div:first-child{
+      margin-bottom: 20px!important;
+    }
+    div{
+      width: 100%!important;;
+    }
+  }
+}
+@media all and (max-width: 624px){
+  .containAccount{
+    flex-direction: column;
+
+    div{
+      margin-bottom: 20px;
+    }
+
+    .profileImgName{
+      flex-direction: column;
+
+      img{
+        margin: 0;
+      }
+
+      div:nth-child(1){
+        margin: 0;
+      }
+
+      div:nth-child(2){
+        margin: 0;
+        text-align: center;
+      }
+    }
+  }
+}

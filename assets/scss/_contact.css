@@ -1,0 +1,26 @@
+.formContact {
+  display: flex;
+  flex-direction: row;
+}
+.formContact div {
+  width: 50%;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 20px;
+  flex-direction: column;
+}
+
+.right > div {
+  width: 100%;
+}
+
+.select {
+  padding: 10px;
+  font-size: 15px;
+  color: white;
+  background-color: #1786C8;
+  border: none;
+}
+
+/*# sourceMappingURL=_contact.css.map */

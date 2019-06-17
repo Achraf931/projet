@@ -1,0 +1,36 @@
+@font-face {
+    src: url("../polices/Radomir Tinkov - Gilroy-Regular.otf");
+    font-family: GilroyRegular;
+}
+@font-face {
+    src: url("../polices/Radomir Tinkov - Gilroy-RegularItalic.otf");
+    font-family: GilroyRegularItalic;
+}
+@font-face {
+    src: url("../polices/Radomir Tinkov - Gilroy-Medium.otf");
+    font-family: GilroyMedium;
+}
+@font-face {
+    src: url("../polices/Radomir Tinkov - Gilroy-MediumItalic.otf");
+    font-family: GilroyMediumItalic;
+}
+@font-face {
+    src: url("../polices/Radomir Tinkov - Gilroy-SemiBold.otf");
+    font-family: GilroySemiBold;
+}
+@font-face {
+    src: url("../polices/Radomir Tinkov - Gilroy-SemiBoldItalic.otf");
+    font-family: GilroySemiBoldItalic;
+}
+@font-face {
+    src: url("../polices/Radomir Tinkov - Gilroy-Bold.otf");
+    font-family: GilroyBold;
+}
+@font-face {
+    src: url("../polices/Radomir Tinkov - Gilroy-BoldItalic.otf");
+    font-family: GilroyBoldItalic;
+}
+.sizeMax{
+    width: 100vw;
+    min-height: 100vh;
+}

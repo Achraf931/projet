@@ -1,0 +1,23 @@
+.collapsible {
+  background-color: $colorBlue;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  margin: 10px 0;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  font-family: GilroySemiBold;
+}
+.nameCat{
+  margin-top: 30px;
+}
+.collapsible:last-child{}
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}

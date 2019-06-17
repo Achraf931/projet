@@ -1,0 +1,14 @@
+@mixin btn(){
+  background-color: #1786C8;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  min-width: 100px;
+  color: white !important;
+  border: none;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+$colorBlue: #1786C8;
+$boxShadow: 0 .5rem 1rem rgba(0, 0, 0, 0.16);

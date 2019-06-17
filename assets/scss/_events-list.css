@@ -1,0 +1,44 @@
+/*events list*/
+.widthContainerEvents {
+  max-width: 1200px;
+  padding: 40px;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.widthContainerEvents img {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.containEvents {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.event {
+  text-align: center;
+  margin: 20px 0;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  line-height: 30px;
+  background-color: white;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  border-radius: 10px;
+}
+.event img {
+  height: 200px;
+}
+
+#allEvents {
+  color: #1786C8;
+  cursor: pointer;
+  text-align: end;
+}
+
+/*# sourceMappingURL=_events-list.css.map */

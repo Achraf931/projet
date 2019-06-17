@@ -1,0 +1,67 @@
+.containerName{
+  display: flex;
+  justify-content: space-between;
+
+  .styledInput{
+    width: 48%;
+  }
+  .styledInput:nth-child(2){
+    flex-direction: column;
+  }
+}
+.containerBtn{
+  display: flex;
+  justify-content: flex-end;
+
+  button:nth-child(2){
+    margin-left: 10px;
+  }
+}
+.select{
+  padding: 10px;
+  font-size: 15px;
+  color: white;
+  background-color: $colorBlue;
+  border: none;
+}
+.styledInput {
+  width: 100%;
+  margin: 0.5rem 0;
+  border-radius: 10px;
+}
+input, textarea {
+  padding: 15px;
+  width: 100%;
+  font-size: 1rem;
+  color: black;
+  border-radius: 10px;
+  border: 1px solid #999;
+}
+input:focus, textarea:focus {
+  border-color: $colorBlue;
+}
+textarea {
+  width: 100%;
+  min-height: 10rem;
+}
+.inputContainer {
+  max-width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+
+  .styledInput:nth-child(3):active{
+  }
+  #containerButtonSend{
+    display: flex;
+    align-self: flex-end;
+
+    button{
+      margin-left: 20px;
+    }
+  }
+}
+.btn{
+  @include btn;
+  display: inline-block;
+}
