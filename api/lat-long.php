@@ -1,11 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 
-try {
-    $db = new PDO('mysql:host=localhost;dbname=town_hall;charset=utf8', 'root', 'root', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-} catch (Exception $exception) {
-    die('Erreur : ' . $exception->getMessage());
-}
+require_once('../tools/common.php');
 
 # Get JSON as a string
 $data = file_get_contents('php://input');

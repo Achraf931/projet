@@ -1,19 +1,4 @@
 <?php
-/*try {
-    $db = new PDO('mysql:host=localhost;dbname=town_hall;charset=utf8', 'root', 'root', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-} catch (Exception $exception) {
-    die('Erreur : ' . $exception->getMessage());
-}
-
-echo 'zeb';
-$queryTest = $db->query('SELECT * FROM events WHERE is_published = 1 AND published_at = \'2019-04-22\'');
-$fetch = $queryTest->fetchAll();
-
-var_dump($fetch);
-var_dump($queryTest);
-die();
-*/
-
 header("Access-Control-Allow-Origin: *");
 # Get JSON as a string
 $data = file_get_contents('php://input');
@@ -31,11 +16,7 @@ function getEvents($published = false, $limit = false)
     $res = new stdClass();
     $array = [];
 
-    try {
-        $db = new PDO('mysql:host=localhost;dbname=town_hall;charset=utf8', 'root', 'root', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-    } catch (Exception $exception) {
-        die('Erreur : ' . $exception->getMessage());
-    }
+    require_once('../tools/common.php');
 
     $queryString = 'SELECT * FROM events WHERE is_published = 1';
 
