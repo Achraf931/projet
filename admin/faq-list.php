@@ -15,7 +15,6 @@ if(isset($_GET['faq_id']) && isset($_GET['action']) && $_GET['action'] == 'delet
         $_SESSION['message'] = "Impossible de supprimer la séléction !";
     }
 }
-//séléctionner tous les articles pour affichage de la liste
 $query = $db->query('SELECT * FROM faq ORDER BY id DESC');
 $faq = $query->fetchall();
 ?>
@@ -34,7 +33,6 @@ $faq = $query->fetchall();
 </head>
 <body>
 <div class="row m-0 justify-content-between sizeMax">
-    <!-- Sidebar -->
     <?php require_once('partials/nav.php'); ?>
 
     <div class="container-fluid col-xl-9 mt-3">

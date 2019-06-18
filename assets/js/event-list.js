@@ -1,14 +1,3 @@
-// window.addEventListener('scroll', function () {
-//     let picker = document.querySelector('#cuppaDatePickerContainer')
-//     let rect = picker.getBoundingClientRect()
-//     let y = rect.top
-//
-//     if (y < 75) {
-//         picker.style.visibility = 'hidden'
-//     } else if(y > 75){
-//         picker.style.visibility = 'visible'
-//     }
-// })
 let sendDate = function (date, type) {
     let object = {
         date: date,

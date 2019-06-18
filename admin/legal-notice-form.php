@@ -19,14 +19,11 @@ if (isset($_POST['save'])) {
             $_POST['content']
         ]);
 
-        //redirection après enregistrement
-        //si $newArticle alors l'enregistrement a fonctionné
         if ($newNotice) {
-            //redirection après enregistrement
             $_SESSION['message'] = 'Mention légale ajouté !';
             header('location:legal-notice-list.php');
             exit;
-        } else { //si pas $newArticle => enregistrement échoué => générer un message pour l'administrateur à afficher plus bas
+        } else {
             $_SESSION['message'] = "Impossible d'enregistrer la nouvelle mention légale...";
         }
     } else{
@@ -49,14 +46,12 @@ if (isset($_POST['update'])) {
 		content = :content
 		WHERE id = :id');
 
-        //mise à jour avec les données du formulaire
         $resultNotice = $query->execute([
             'title' => $_POST['title'],
             'content' => $_POST['content'],
             'id' => $_POST['id']
         ]);
 
-        //si enregistrement ok
         if ($resultNotice) {
             $_SESSION['message'] = 'Mention légale mise à jour !';
             header('location:legal-notice-list.php');
@@ -66,12 +61,9 @@ if (isset($_POST['update'])) {
     }
 }
 
-//si on modifie un article, on doit séléctionner l'article en question (id envoyé dans URL) pour pré-remplir le formulaire plus bas
 if (isset($_GET['notice_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
-
     $query = $db->prepare('SELECT * FROM notices WHERE id = ?');
     $query->execute(array($_GET['notice_id']));
-    //$article contiendra les informations de l'article dont l'id a été envoyé en paramètre d'URL
     $notice = $query->fetch();
 }
 
@@ -95,7 +87,6 @@ if(isset($_GET['notice_id']) AND $_GET['notice_id'] !== $notice['id']) {
 </head>
 <body>
 <div class="row m-0 justify-content-between sizeMax">
-    <!-- Sidebar -->
     <?php require_once('partials/nav.php'); ?>
 
     <div class="container-fluid col-xl-9 mt-3">
@@ -119,21 +110,16 @@ if(isset($_GET['notice_id']) AND $_GET['notice_id'] !== $notice['id']) {
                     </div>
 
                     <div class="text-right">
-                        <!-- Si $article existe, on affiche un lien de mise à jour -->
                         <?php if (isset($notice)): ?>
                             <input class="btn btn-success" type="submit" name="update" value="Mettre à jour">
-                            <!-- Sinon on afficher un lien d'enregistrement d'un nouvel article -->
                         <?php else: ?>
                             <input class="btn btn-success" type="submit" name="save" value="Enregistrer">
                         <?php endif; ?>
                     </div>
 
-                    <!-- Si $article existe, on ajoute un champ caché contenant l'id de l'article à modifier pour la requête UPDATE -->
                     <?php if (isset($notice)): ?>
                         <input type="hidden" name="id" value="<?= $notice['id']; ?>">
                     <?php endif; ?>
-
-
                 </form>
         </div>
     </div>

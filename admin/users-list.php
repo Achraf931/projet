@@ -34,7 +34,6 @@ if(isset($_GET['user_id']) && isset($_GET['action']) && $_GET['action'] == 'dele
         $_SESSION['message'] = "Impossible de supprimer la séléction !";
     }
 }
-//séléctionner tous les articles pour affichage de la liste
 $query = $db->query('SELECT * FROM users ORDER BY id DESC');
 $users = $query->fetchall();
 ?>
@@ -53,7 +52,6 @@ $users = $query->fetchall();
 </head>
 <body>
 <div class="row m-0 justify-content-between sizeMax">
-    <!-- Sidebar -->
     <?php require_once('partials/nav.php'); ?>
 
     <div class="container-fluid col-xl-9 mt-3">

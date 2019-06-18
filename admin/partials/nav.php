@@ -1,10 +1,7 @@
 <?php
-//nombre d'enregistrements de la table user
 $nbUsers = $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
-//nombre d'enregistrements de la table category
 $nbCategories = $db->query("SELECT COUNT(*) FROM categories")->fetchColumn();
 $nbEvents = $db->query("SELECT COUNT(*) FROM events")->fetchColumn();
-//nombre d'enregistrements de la table article
 $nbBills = $db->query("SELECT COUNT(*) FROM bills")->fetchColumn();
 $nbNotices = $db->query("SELECT COUNT(*) FROM notices")->fetchColumn();
 $nbFaq = $db->query("SELECT COUNT(*) FROM faq")->fetchColumn();

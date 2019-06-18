@@ -49,14 +49,11 @@ if (isset($_POST['save'])) {
             $_POST['video']
         ]);
 
-        //redirection après enregistrement
-        //si $newArticle alors l'enregistrement a fonctionné
         if ($newEvent) {
-            //redirection après enregistrement
             $_SESSION['message'] = 'Evénement ajouté !';
             header('location:events-list.php');
             exit;
-        } else { //si pas $newArticle => enregistrement échoué => générer un message pour l'administrateur à afficher plus bas
+        } else {
             $message = "Impossible d'enregistrer le nouvel événement...";
         }
 
@@ -116,7 +113,6 @@ if (isset($_POST['update'])) {
 		video = :video
 		WHERE id = :id');
 
-        //mise à jour avec les données du formulaire
         $resultEvent = $query->execute([
             'title' => $_POST['title'],
             'content' => $_POST['content'],
@@ -135,7 +131,6 @@ if (isset($_POST['update'])) {
         }
 
 
-        //si enregistrement ok
         if ($resultEvent) {
             $_SESSION['message'] = 'Evénement mis à jour !';
             header('location:events-list.php');
@@ -183,7 +178,6 @@ if (isset($_POST['delete_image'])) {
 }
 
 
-//si on modifie un article, on doit séléctionner l'article en question (id envoyé dans URL) pour pré-remplir le formulaire plus bas
 if (isset($_GET['event_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
     $query = $db->prepare('SELECT * FROM events WHERE id = ?');
     $query->execute(array($_GET['event_id']));
@@ -216,13 +210,12 @@ if(isset($_GET['event_id']) AND $_GET['event_id'] !== $event['id']) {
 </head>
 <body>
 <div class="row m-0 justify-content-between sizeMax">
-    <!-- Sidebar -->
     <?php require_once('partials/nav.php'); ?>
 
     <div class="container-fluid col-xl-9 mt-3">
         <div class="card-body">
             <h4><?php if (isset($event)): ?>Modifier<?php else: ?>Ajouter<?php endif; ?> un événement</h4>
-            <?php if (isset($message)): //si un message a été généré plus haut, l'afficher ?>
+            <?php if (isset($message)): ?>
                 <div class="bg-danger text-white">
                     <?= $message; ?>
                 </div>
@@ -302,16 +295,13 @@ if(isset($_GET['event_id']) AND $_GET['event_id'] !== $event['id']) {
                             </div>
 
                             <div class="text-right">
-                                <!-- Si $article existe, on affiche un lien de mise à jour -->
                                 <?php if (isset($event)): ?>
                                     <input class="btn btn-success" type="submit" name="update" value="Mettre à jour"/>
-                                    <!-- Sinon on afficher un lien d'enregistrement d'un nouvel article -->
                                 <?php else: ?>
                                     <input class="btn btn-success" type="submit" name="save" value="Enregistrer"/>
                                 <?php endif; ?>
                             </div>
 
-                            <!-- Si $article existe, on ajoute un champ caché contenant l'id de l'article à modifier pour la requête UPDATE -->
                             <?php if (isset($event)): ?>
                                 <input type="hidden" name="id" value="<?= $event['id']; ?>"/>
                                 <input type="hidden" name="imgExist" value="<?= $event['image']; ?>"/>

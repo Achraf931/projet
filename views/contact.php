@@ -3,30 +3,6 @@
         <div class="background widthContainer">
             <h2 class="marginBottom">Contact</h2>
             <form class="formContact" action="index.php?page=contact" method="post" enctype="multipart/form-data">
-
-                <!--<div class="right">
-                    <div>
-                        <label for="name">Nom :</label><br>
-                        <input type="text" id="name" name="name">
-                    </div>
-                    <div>
-                        <label for="firstname">Prénom :</label><br>
-                        <input type="text" id="firstname" name="firstname">
-                    </div>
-                    <div>
-                        <label for="emailContact">Adresse email :</label><br>
-                        <input type="email" id="emailContact" name="emailContact">
-                    </div>
-                    <div>
-                        <label for="mobile">Numéro de téléphone :</label><br>
-                        <input type="number" id="mobile" name="mobile">
-                    </div>
-                    <div>
-                        <label for="message">Message :</label><br>
-                        <textarea type="text" id="message" name="message" content=""></textarea><br>
-                        <button style="float: right;" type="submit" class="btn">Envoyez</button>
-                    </div>
-                </div>-->
                 <div class="inputContainer">
                     <div class="styledInput">
                         <select class="select" name="choiceOne" id="choiceOne">
@@ -36,9 +12,6 @@
                             <?php endforeach; ?>
                         </select>
                         <select class="select" name="choiceTwo" id="choiceTwo" style="display: none;">
-<!--                            --><?php //foreach ($secondChoices as $secondChoice): ?>
-<!--                                <option value="--><?//= isset($secondChoice) ? htmlentities($secondChoice['choice']) : ''; ?><!--">--><?//= isset($secondChoice) ? htmlentities($secondChoice['choice']) : ''; ?><!--</option>-->
-<!--                            --><?php //endforeach; ?>
                         </select>
                         <span style="color: red; display: block" id="choiceOneError"></span>
                         <span style="color: red; display: block" id="choiceTwoError"></span>

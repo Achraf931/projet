@@ -16,14 +16,12 @@ if (isset($_GET['bill_id']) && isset($_GET['action']) && $_GET['action'] == 'del
 
     unlink($pathDelete . $recupImage['bill']);
 
-    //générer un message à afficher pour l'administrateur
     if ($result) {
         $_SESSION['message'] = 'Suppression efféctuée !';
     } else {
         $_SESSION['message'] = "Impossible de supprimer la séléction !";
     }
 }
-//séléctionner tous les articles pour affichage de la liste
 $query = $db->query('SELECT * FROM bills ORDER BY id DESC');
 $bills = $query->fetchall();
 ?>

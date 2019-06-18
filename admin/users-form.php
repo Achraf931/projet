@@ -63,8 +63,7 @@ if (isset($_POST['save'])) {
             $_POST['admin'],
             hash('md5', $password)
         ]);
-        //redirection après enregistrement
-        //si $newArticle alors l'enregistrement a fonctionné
+
         if ($newUser) {
             $to = $_POST['email'];
             $subject = "Votre mot de passe";
@@ -78,7 +77,7 @@ if (isset($_POST['save'])) {
             $_SESSION['message'] = 'Utilisateur ajouté !';
             header('location:users-list.php');
             exit;
-        } else { //si pas $newArticle => enregistrement échoué => générer un message pour l'administrateur à afficher plus bas
+        } else {
             $message = "Impossible d'enregistrer le nouvel utilisateur...";
         }
     } else{
@@ -131,7 +130,6 @@ if (isset($_POST['update'])) {
 		admin = :admin
 		WHERE id = :id');
 
-        //mise à jour avec les données du formulaire
         $resultUser = $query->execute([
             'name' => $_POST['name'],
             'firstname' => $_POST['firstname'],
@@ -143,7 +141,6 @@ if (isset($_POST['update'])) {
             'id' => $_POST['id']
         ]);
 
-        //si enregistrement ok
         if ($resultUser) {
             $_SESSION['message'] = 'Utilisateur mis à jour !';
             header('location:users-list.php');
@@ -154,12 +151,9 @@ if (isset($_POST['update'])) {
     }
 }
 
-//si on modifie un article, on doit séléctionner l'article en question (id envoyé dans URL) pour pré-remplir le formulaire plus bas
 if (isset($_GET['user_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
-
     $query = $db->prepare('SELECT * FROM users WHERE id = ?');
     $query->execute(array($_GET['user_id']));
-    //$article contiendra les informations de l'article dont l'id a été envoyé en paramètre d'URL
     $user = $query->fetch();
 }
 
@@ -183,7 +177,6 @@ if(isset($_GET['user_id']) AND $_GET['user_id'] !== $user['id']) {
 </head>
 <body>
 <div class="row m-0 justify-content-between sizeMax">
-    <!-- Sidebar -->
     <?php require_once('partials/nav.php'); ?>
 
     <div class="container-fluid col-xl-9 mt-3">
@@ -246,21 +239,16 @@ if(isset($_GET['user_id']) AND $_GET['user_id'] !== $user['id']) {
                     </div>
 
                     <div class="text-right">
-                        <!-- Si $article existe, on affiche un lien de mise à jour -->
                         <?php if (isset($user)): ?>
                             <input class="btn btn-success" type="submit" name="update" value="Mettre à jour"/>
-                            <!-- Sinon on afficher un lien d'enregistrement d'un nouvel article -->
                         <?php else: ?>
                             <input class="btn btn-success" type="submit" name="save" value="Enregistrer"/>
                         <?php endif; ?>
                     </div>
 
-                    <!-- Si $article existe, on ajoute un champ caché contenant l'id de l'article à modifier pour la requête UPDATE -->
                     <?php if (isset($user)): ?>
                         <input type="hidden" name="id" value="<?= $user['id']; ?>"/>
                     <?php endif; ?>
-
-
                 </form>
         </div>
     </div>

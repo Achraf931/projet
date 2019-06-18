@@ -1,7 +1,6 @@
 <?php
 require_once('tools/common.php');
 
-//supprimer l'article dont l'ID est envoyé en paramètre URL
 if (isset($_GET['event_id']) && isset($_GET['action']) && $_GET['action'] == 'delete') {
     $selectImage = $db->prepare('SELECT image FROM events WHERE id = ?');
     $selectImage->execute([
@@ -18,14 +17,12 @@ if (isset($_GET['event_id']) && isset($_GET['action']) && $_GET['action'] == 'de
 
     unlink($pathDelete . $recupImage['image']);
 
-    //générer un message à afficher pour l'administrateur
     if ($result) {
         $_SESSION['message'] = 'Suppression efféctuée !';
     } else {
         $_SESSION['message'] = "Impossible de supprimer la séléction !";
     }
 }
-//séléctionner tous les articles pour affichage de la liste
 $query = $db->query('SELECT * FROM events ORDER BY id DESC');
 $events = $query->fetchall();
 ?>
@@ -44,7 +41,6 @@ $events = $query->fetchall();
 </head>
 <body>
 <div class="row m-0 justify-content-between sizeMax">
-    <!-- Sidebar -->
     <?php require_once('partials/nav.php'); ?>
 
     <div class="container-fluid col-xl-9 mt-3">

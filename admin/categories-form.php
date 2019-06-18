@@ -14,14 +14,11 @@ if (isset($_POST['save'])) {
             $_POST['name']
         ]);
 
-        //redirection après enregistrement
-        //si $newArticle alors l'enregistrement a fonctionné
         if ($newCategory) {
-            //redirection après enregistrement
             $_SESSION['message'] = 'Catégorie ajouté !';
             header('location:categories-list.php');
             exit;
-        } else { //si pas $newArticle => enregistrement échoué => générer un message pour l'administrateur à afficher plus bas
+        } else {
             $_SESSION['message'] = "Impossible d'enregistrer la nouvelle catégorie...";
         }
     } else{
@@ -39,13 +36,11 @@ if (isset($_POST['update'])) {
 		name = :name
 		WHERE id = :id');
 
-        //mise à jour avec les données du formulaire
         $resultCategory = $query->execute([
             'name' => $_POST['name'],
             'id' => $_POST['id']
         ]);
 
-        //si enregistrement ok
         if ($resultCategory) {
             $_SESSION['message'] = 'Catégorie mise à jour !';
             header('location:categories-list.php');
@@ -55,12 +50,10 @@ if (isset($_POST['update'])) {
     }
 }
 
-//si on modifie un article, on doit séléctionner l'article en question (id envoyé dans URL) pour pré-remplir le formulaire plus bas
 if (isset($_GET['category_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
 
     $query = $db->prepare('SELECT * FROM categories WHERE id = ?');
     $query->execute(array($_GET['category_id']));
-    //$article contiendra les informations de l'article dont l'id a été envoyé en paramètre d'URL
     $category = $query->fetch();
 }
 
@@ -84,7 +77,6 @@ if(isset($_GET['category_id']) AND $_GET['category_id'] !== $category['id']) {
 </head>
 <body>
 <div class="row m-0 justify-content-between sizeMax">
-    <!-- Sidebar -->
     <?php require_once('partials/nav.php'); ?>
 
     <div class="container-fluid col-xl-9 mt-3">
@@ -102,16 +94,13 @@ if(isset($_GET['category_id']) AND $_GET['category_id'] !== $category['id']) {
                         <span style="color: red;"><?= isset($messages['name']) ? $messages['name'] : ''; ?></span>
                     </div>
                     <div class="text-right">
-                        <!-- Si $article existe, on affiche un lien de mise à jour -->
                         <?php if (isset($category)): ?>
                             <input class="btn btn-success" type="submit" name="update" value="Mettre à jour">
-                            <!-- Sinon on afficher un lien d'enregistrement d'un nouvel article -->
                         <?php else: ?>
                             <input class="btn btn-success" type="submit" name="save" value="Enregistrer">
                         <?php endif; ?>
                     </div>
 
-                    <!-- Si $article existe, on ajoute un champ caché contenant l'id de l'article à modifier pour la requête UPDATE -->
                     <?php if (isset($category)): ?>
                         <input type="hidden" name="id" value="<?= $category['id']; ?>">
                     <?php endif; ?>

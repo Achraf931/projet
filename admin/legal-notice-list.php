@@ -15,7 +15,6 @@ if(isset($_GET['notice_id']) && isset($_GET['action']) && $_GET['action'] == 'de
         $_SESSION['message'] = "Impossible de supprimer la séléction !";
     }
 }
-//séléctionner tous les articles pour affichage de la liste
 $query = $db->query('SELECT * FROM notices ORDER BY id DESC');
 $notice = $query->fetchall();
 ?>
@@ -34,7 +33,6 @@ $notice = $query->fetchall();
 </head>
 <body>
 <div class="row m-0 justify-content-between sizeMax">
-    <!-- Sidebar -->
     <?php require_once('partials/nav.php'); ?>
 
     <div class="container-fluid col-xl-9 mt-3">

@@ -51,14 +51,11 @@ if (isset($_POST['save'])) {
             $_POST['users']
         ]);
 
-        //redirection après enregistrement
-        //si $newArticle alors l'enregistrement a fonctionné
         if ($newBill) {
-            //redirection après enregistrement
             $_SESSION['message'] = 'Facture ajouté !';
             header('location:bills-list.php');
             exit;
-        } else { //si pas $newArticle => enregistrement échoué => générer un message pour l'administrateur à afficher plus bas
+        } else {
             $_SESSION['message'] = "Impossible d'enregistrer la nouvelle facture...";
         }
     } else {
@@ -123,7 +120,6 @@ if (isset($_POST['update'])) {
 		user_id = :user_id
 		WHERE id = :id');
 
-        //mise à jour avec les données du formulaire
         $resultBill = $query->execute([
             'number' => $_POST['number'],
             'services' => $_POST['services'],
@@ -140,7 +136,6 @@ if (isset($_POST['update'])) {
                 unlink($pathPdf . $recupBill['bill']);
                 move_uploaded_file($_FILES['pdfBill']['tmp_name'], $destination);
             }
-                //si enregistrement ok
         if ($resultBill) {
             $_SESSION['message'] = 'Facture mise à jour !';
             header('location:bills-list.php');
@@ -151,7 +146,6 @@ if (isset($_POST['update'])) {
     }
 }
 
-//si on modifie un article, on doit séléctionner l'article en question (id envoyé dans URL) pour pré-remplir le formulaire plus bas
 if (isset($_GET['bill_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
 
     $query = $db->prepare('SELECT * FROM bills WHERE id = ?');
@@ -182,7 +176,6 @@ if(isset($_GET['bill_id']) AND $_GET['bill_id'] !== $bill['id']) {
 </head>
 <body>
 <div class="row m-0 justify-content-between sizeMax">
-    <!-- Sidebar -->
     <?php require_once('partials/nav.php'); ?>
 
     <div class="container-fluid col-xl-9 mt-3">
@@ -249,7 +242,6 @@ if(isset($_GET['bill_id']) AND $_GET['bill_id'] !== $bill['id']) {
                     </div>
 
                     <div class="text-right">
-                        <!-- Si $article existe, on affiche un lien de mise à jour -->
                         <?php if (isset($bill)): ?>
                             <input class="btn btn-success" type="submit" name="update" value="Mettre à jour"/>
                             <!-- Sinon on afficher un lien d'enregistrement d'un nouvel article -->
@@ -258,7 +250,6 @@ if(isset($_GET['bill_id']) AND $_GET['bill_id'] !== $bill['id']) {
                         <?php endif; ?>
                     </div>
 
-                    <!-- Si $article existe, on ajoute un champ caché contenant l'id de l'article à modifier pour la requête UPDATE -->
                     <?php if (isset($bill)): ?>
                         <input type="hidden" name="id" value="<?= $bill['id']; ?>"/>
                         <input type="hidden" name="pdfExist" value="<?= $bill['bill']; ?>"/>

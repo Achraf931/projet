@@ -18,14 +18,11 @@ if (isset($_POST['save'])) {
             $_POST['content']
         ]);
 
-        //redirection après enregistrement
-        //si $newArticle alors l'enregistrement a fonctionné
         if ($newInfos) {
-            //redirection après enregistrement
             $_SESSION['message'] = 'Infos ajouté !';
             header('location:infos.php');
             exit;
-        } else { //si pas $newArticle => enregistrement échoué => générer un message pour l'administrateur à afficher plus bas
+        } else {
             $_SESSION['message'] = "Impossible d'enregistrer les nouvelles infos...";
         }
     } else{
@@ -47,14 +44,12 @@ if (isset($_POST['update'])) {
 		content = :content
 		WHERE id = :id');
 
-        //mise à jour avec les données du formulaire
         $resultInfos = $query->execute([
             'title' => $_POST['title'],
             'content' => $_POST['content'],
             'id' => $_POST['id']
         ]);
 
-        //si enregistrement ok
         if ($resultInfos) {
             $_SESSION['message'] = 'Infos mise à jour !';
             header('location:infos.php');
@@ -64,12 +59,10 @@ if (isset($_POST['update'])) {
     }
 }
 
-//si on modifie un article, on doit séléctionner l'article en question (id envoyé dans URL) pour pré-remplir le formulaire plus bas
 if (isset($_GET['info_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
 
     $query = $db->prepare('SELECT * FROM infos WHERE id = ?');
     $query->execute(array($_GET['info_id']));
-    //$article contiendra les informations de l'article dont l'id a été envoyé en paramètre d'URL
     $infos = $query->fetch();
 }
 
@@ -93,7 +86,6 @@ if(isset($_GET['info_id']) AND $_GET['info_id'] !== $infos['id']) {
 </head>
 <body>
 <div class="row m-0 justify-content-between sizeMax">
-    <!-- Sidebar -->
     <?php require_once('partials/nav.php'); ?>
 
     <div class="container-fluid col-xl-9 mt-3">
@@ -116,16 +108,13 @@ if(isset($_GET['info_id']) AND $_GET['info_id'] !== $infos['id']) {
                         <span style="color: red;"><?= isset($messages['content']) ? $messages['content'] : ''; ?></span>
                     </div>
                     <div class="text-right">
-                        <!-- Si $article existe, on affiche un lien de mise à jour -->
                         <?php if (isset($infos)): ?>
                             <input class="btn btn-success" type="submit" name="update" value="Mettre à jour">
-                            <!-- Sinon on afficher un lien d'enregistrement d'un nouvel article -->
                         <?php else: ?>
                             <input class="btn btn-success" type="submit" name="save" value="Enregistrer">
                         <?php endif; ?>
                     </div>
 
-                    <!-- Si $article existe, on ajoute un champ caché contenant l'id de l'article à modifier pour la requête UPDATE -->
                     <?php if (isset($infos)): ?>
                         <input type="hidden" name="id" value="<?= $infos['id']; ?>">
                     <?php endif; ?>
