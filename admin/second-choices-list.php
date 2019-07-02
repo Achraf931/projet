@@ -1,25 +1,22 @@
 <?php
 require_once('tools/common.php');
 
-if(isset($_GET['category_id']) && isset($_GET['action']) && $_GET['action'] == 'delete'){
-    $queryFaq = $db->prepare('DELETE FROM faq WHERE category_id = ?');
-    $queryFaq->execute([
-            $_GET['category_id']
-    ]);
-    $query = $db->prepare('DELETE FROM categories WHERE id = ?');
+if(isset($_GET['second_choice_id']) && isset($_GET['action']) && $_GET['action'] == 'delete'){
+
+    $query = $db->prepare('DELETE FROM second_choices WHERE id = ?');
     $result = $query->execute([
-        $_GET['category_id']
+        $_GET['second_choice_id']
     ]);
 
-    if($result AND $queryFaq){
+    if($result){
         $_SESSION['message'] = 'Suppression efféctuée !';
     }
     else{
         $_SESSION['message'] = "Impossible de supprimer la séléction !";
     }
 }
-$query = $db->query('SELECT * FROM categories ORDER BY id DESC');
-$categories = $query->fetchall();
+$query = $db->query('SELECT * FROM second_choices ORDER BY id DESC');
+$secondChoices = $query->fetchall();
 ?>
 
 <!DOCTYPE html>
@@ -40,8 +37,8 @@ $categories = $query->fetchall();
 
     <div class="container-fluid col-xl-9 mt-3">
         <div class="card mb-3 justify-content-center">
-            <div class="card-header"><i class="fas fa-fw fa-table"></i> Liste des catégories
-                <a class="btn btn-primary float-right" href="categories-form.php">Ajouter une catégorie</a>
+            <div class="card-header"><i class="fal fa-th-list"></i> Liste des seconds choix de contact
+                <a class="btn btn-primary float-right" href="second-choices-form.php">Ajouter un deuxième choix de contact</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -55,26 +52,26 @@ $categories = $query->fetchall();
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>Nom</th>
+                            <th>Titre</th>
+                            <th>Liaison</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <?php if ($categories): ?>
-                            <?php foreach ($categories as $category): ?>
+                        <?php if ($secondChoices): ?>
+                            <?php foreach ($secondChoices as $secondChoice): ?>
                                 <tr>
-                                    <td><?= htmlentities($category['id']); ?></td>
-                                    <td><?= htmlentities($category['name']); ?></td>
+                                    <td><?= htmlentities($secondChoice['id']); ?></td>
+                                    <td><?= htmlentities($secondChoice['choice']); ?></td>
+                                    <td><?= htmlentities($secondChoice['choices_id']); ?></td>
                                     <td class="d-flex justify-content-center">
-                                        <a href="categories-form.php?category_id=<?= $category['id']; ?>&action=edit"
-                                           class="btn btn-warning mr-2">Modifier</a>
-                                        <a href="categories-list.php?category_id=<?= $category['id']; ?>&action=delete"
-                                           class="btn btn-danger">Supprimer</a>
+                                        <a href="second-choices-form.php?second_choice_id=<?= $secondChoice['id']; ?>&action=edit" class="btn btn-warning mr-2">Modifier</a>
+                                        <a href="second-choices-list.php?second_choice_id=<?= $secondChoice['id']; ?>&action=delete" class="btn btn-danger">Supprimer</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            Aucune catégorie enregistré.
+                            Aucun élément enregistré.
                         <?php endif; ?>
                         </tbody>
                     </table>

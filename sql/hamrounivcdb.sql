@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : hamrounivcdb.mysql.db
--- Généré le :  mar. 18 juin 2019 à 14:36
+-- Généré le :  mar. 02 juil. 2019 à 18:46
 -- Version du serveur :  5.6.43-log
 -- Version de PHP :  5.6.40
 
@@ -45,7 +45,9 @@ CREATE TABLE `bills` (
 
 INSERT INTO `bills` (`id`, `number`, `services`, `amount`, `date`, `status`, `user_id`, `bill`) VALUES
 (13, 198732, 'Sport', '189', '2019-05-01', 1, 2, '1696373057.pdf'),
-(17, 134, 'Sport', '29', '2019-06-06', 1, 2, '721217393.pdf');
+(17, 134, 'Sport', '29', '2019-06-06', 1, 2, '721217393.pdf'),
+(19, 10, 'Etudes', '299', '2019-07-07', 1, 22, '5bd73c47f740c79cbdeb1d5887a93527.pdf'),
+(20, 11, 'Brocante', '19', '2018-06-01', 1, 22, 'bc2ff19b6b721c6e781bdf58f3b4b4f7.pdf');
 
 -- --------------------------------------------------------
 
@@ -199,19 +201,6 @@ INSERT INTO `infos` (`id`, `title`, `content`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `maps`
---
-
-CREATE TABLE `maps` (
-  `id` int(11) NOT NULL,
-  `latitude` decimal(10,0) NOT NULL,
-  `longitude` decimal(10,0) NOT NULL,
-  `service_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `messages`
 --
 
@@ -361,7 +350,12 @@ INSERT INTO `messages` (`id`, `name`, `firstname`, `email`, `mobile`, `message`,
 (133, 'Admin', 'Achraf', 'hamrounich@outlook.fr', 788782583, 'retest du cc', '2019-06-17', '5', ''),
 (134, 'Admin', 'Achraf', 'hamrounich@outlook.fr', 788782583, 'test des espaces dans le titre', '2019-06-17', '5', ''),
 (135, 'Admin', 'Achraf', 'hamrounich@outlook.fr', 788782583, 'retest des espaces', '2019-06-17', '5', ''),
-(136, 'Admin', 'Achraf', 'hamrounich@outlook.fr', 788782583, 'rien du tout', '2019-06-17', '5', '');
+(136, 'Admin', 'Achraf', 'hamrounich@outlook.fr', 788782583, 'rien du tout', '2019-06-17', '5', ''),
+(137, 'Max', 'Max', 'maxime.basset31@gmail.com', 0, 'Message test, et j\'espère que cette fois y\'a toutes les infos dans le mail !', '2019-06-18', '4', '13'),
+(138, 'Max', 'Max', 'maxime.basset31@gmail.com', 0, 'gjhgh jfgyj tyu', '2019-06-18', '4', '13'),
+(139, 'Max', 'Max', 'maxime.basset31@gmail.com', 0, 'ty tuy yruk uy', '2019-06-18', '4', '13'),
+(140, 'Max', 'Max', 'maxime.basset31@gmail.com', 0, 'tyr uyuk uykiluy uyil uyl y', '2019-06-18', '4', '13'),
+(141, 'az', 'az', 'fd@sd.fr', 0, 'fd', '2019-06-18', '3', '10');
 
 -- --------------------------------------------------------
 
@@ -472,10 +466,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `firstname`, `birthdate`, `address`, `city`, `zipcode`, `email`, `password`, `mobile`, `admin`, `verif`) VALUES
 (2, 'Admin', 'Achraf', '2019-04-02', '134 rue saint denis', 'Montreuil', 93100, 'hamrounich@outlook.fr', 'ac905e701e76ef3385de7cdd5acd4eab', '0788782583', 1, 1),
-(3, 'User', 'Test', '2019-06-05', '12 rue ', 'mont', 1234, 'user@test.fr', '098f6bcd4621d373cade4e832627b4f6', '0788782583', 0, 0),
-(4, 'Kirigaya', 'Kirito', '1996-12-05', '11 Rue Chappe', 'Paris', 75018, 'achraaf93@gmail.com', '61e9c06ea9a85a5088a499df6458d276', '788782583', 0, 0),
-(15, 'Prof', 'Max', '1980-06-07', 'En a pas', 'Les lilas', 93260, 'max@max.fr', 'b53759f3ce692de7aff1b5779d3964da', NULL, 1, 1),
-(19, 'Lima', 'Steven', '1996-06-10', 'Noisy', 'Noisy-Le-Sec', 93130, 'stevenlima@outlook.fr', '9e78febce11f16455180b332ed285a3e', '', 0, 1);
+(15, 'Prof', 'Admin', '1980-06-07', 'En a pas', 'Les lilas', 93260, 'prof@prof.fr', '2e6b3ac70fe4b120406d31f3bbd598cc', NULL, 1, 0),
+(22, 'Doe', 'John', '1990-01-01', '55 Clark St', 'Brooklyn, USA', 11201, 'john.test.doe@outlook.fr', '0efffc51d5e228e69bec75545457b977', '', 0, 0);
 
 --
 -- Index pour les tables déchargées
@@ -525,12 +517,6 @@ ALTER TABLE `infos`
   ADD PRIMARY KEY (`id`);
 
 --
--- Index pour la table `maps`
---
-ALTER TABLE `maps`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Index pour la table `messages`
 --
 ALTER TABLE `messages`
@@ -568,12 +554,12 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pour la table `bills`
 --
 ALTER TABLE `bills`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT pour la table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT pour la table `choices`
 --
@@ -583,12 +569,12 @@ ALTER TABLE `choices`
 -- AUTO_INCREMENT pour la table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT pour la table `faq`
 --
 ALTER TABLE `faq`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT pour la table `images`
 --
@@ -600,15 +586,10 @@ ALTER TABLE `images`
 ALTER TABLE `infos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
--- AUTO_INCREMENT pour la table `maps`
---
-ALTER TABLE `maps`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
 -- AUTO_INCREMENT pour la table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
 --
 -- AUTO_INCREMENT pour la table `notices`
 --
@@ -628,7 +609,7 @@ ALTER TABLE `services`
 -- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- Contraintes pour les tables déchargées
 --

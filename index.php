@@ -2,7 +2,7 @@
 function dbConnect(){
     setlocale(LC_ALL, "fr_FR");
     try {
-        return $db = new PDO('mysql:host=hamrounivcdb.mysql.db;dbname=hamrounivcdb;charset=utf8', 'hamrounivcdb', 'Achraf93', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+        return $db = new PDO('mysql:host=localhost;dbname=hamrounivcdb;charset=utf8', 'root', 'root', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
     } catch (Exception $exception) {
         die('Erreur : ' . $exception->getMessage());
     }
@@ -14,6 +14,7 @@ session_start();
 if (isset($_GET['logout']) && isset($_SESSION['user'])) {
     unset($_SESSION['user']);
     header('Location:index.php');
+    exit;
 }
 
 if (isset($_GET['page'])) {
@@ -52,10 +53,6 @@ if (isset($_GET['page'])) {
 
         case 'services':
             require('./controllers/controller_services.php');
-            break;
-
-        case 'payments':
-            require('./controllers/controller_payments.php');
             break;
 
         case 'verification':

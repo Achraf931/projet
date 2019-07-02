@@ -1,8 +1,6 @@
 <?php
-if (isset($_SESSION['user']) AND $_SESSION['user']['verif'] == 0){
-    header('Location:index.php?page=verification');
-    exit;
-}
+require_once ('./tools/userVerif.php');
+
 if (isset($_SESSION['user'])) {
     require_once('./models/model_account.php');
     require_once('./models/model_profile.php');

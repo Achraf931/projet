@@ -13,26 +13,26 @@
                         </select>
                         <select class="select" name="choiceTwo" id="choiceTwo" style="display: none;">
                         </select>
-                        <span style="color: red; display: block" id="choiceOneError"></span>
-                        <span style="color: red; display: block" id="choiceTwoError"></span>
+                        <span class="errorsMsg" style="color: red; display: block" id="choiceOneError"></span>
+                        <span class="errorsMsg" style="color: red; display: block" id="choiceTwoError"></span>
                     </div>
                     <div class="containerName">
                         <div class="styledInput">
                             <label for="name">Nom :<span class="mandatory">*</span></label>
                             <input class="id" type="text" name="name" id="name" value="<?= isset($_SESSION['user']) ? htmlentities($infoUser['name']) : ''; ?>">
-                            <span style="color: red;" id="nameError"></span>
+                            <span class="errorsMsg" style="color: red;" id="nameError"></span>
                         </div>
                         <div class="styledInput">
                             <label for="firstname">Prénom :<span class="mandatory">*</span></label>
                             <input class="id" type="text" name="firstname" id="firstname" value="<?= isset($_SESSION['user']) ? htmlentities($infoUser['firstname']) : ''; ?>">
-                            <span style="color: red;" id="firstnameError"></span>
+                            <span class="errorsMsg" style="color: red;" id="firstnameError"></span>
                         </div>
                     </div>
                     <div class="styledInput">
                         <label for="email">Email :<span class="mandatory">*</span></label>
                         <input class="id" type="text" name="emailMess" id="emailMess" value="<?= isset($_SESSION['user']) ? htmlentities($infoUser['email']) : ''; ?>">
-                        <span style="color: red;" id="emailMessError"></span>
-                        <span style="color: red;" id="validEmailError"></span>
+                        <span class="errorsMsg" style="color: red;" id="emailMessError"></span>
+                        <span class="errorsMsg" style="color: red;" id="validEmailError"></span>
                     </div>
                     <div class="styledInput">
                         <label for="mobile">Mobile :</label>
@@ -41,7 +41,7 @@
                     <div class="styledInput">
                         <label for="message">Message :<span class="mandatory">*</span></label>
                         <textarea name="message" id="message"></textarea>
-                        <span style="color: red;" id="messageError"></span>
+                        <span class="errorsMsg" style="color: red;" id="messageError"></span>
                     </div>
                     <div id="containerButtonSend">
                         <div class="btn" type="submit" name="sendMessage" id="sendMessage">Envoyez</div>

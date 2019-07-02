@@ -11,7 +11,7 @@ if (isset($_POST['save'])) {
     if (empty($messages)) {
         $queryInsert = $db->prepare('INSERT INTO categories (name) VALUES (?)');
         $newCategory = $queryInsert->execute([
-            $_POST['name']
+            htmlspecialchars($_POST['name'])
         ]);
 
         if ($newCategory) {
@@ -32,12 +32,12 @@ if (isset($_POST['update'])) {
         $messages['name'] = 'Le nom est obligatoire !';
     }
     if (empty($messages)) {
-        $query = $db->prepare('UPDATE categories SET
+        $queryUpdt = $db->prepare('UPDATE categories SET
 		name = :name
 		WHERE id = :id');
 
-        $resultCategory = $query->execute([
-            'name' => $_POST['name'],
+        $resultCategory = $queryUpdt->execute([
+            'name' => htmlspecialchars($_POST['name']),
             'id' => $_POST['id']
         ]);
 
@@ -52,9 +52,9 @@ if (isset($_POST['update'])) {
 
 if (isset($_GET['category_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
 
-    $query = $db->prepare('SELECT * FROM categories WHERE id = ?');
-    $query->execute(array($_GET['category_id']));
-    $category = $query->fetch();
+    $querySlc = $db->prepare('SELECT * FROM categories WHERE id = ?');
+    $querySlc->execute(array($_GET['category_id']));
+    $category = $querySlc->fetch();
 }
 
 if(isset($_GET['category_id']) AND $_GET['category_id'] !== $category['id']) {
@@ -91,7 +91,7 @@ if(isset($_GET['category_id']) AND $_GET['category_id'] !== $category['id']) {
                     <div class="form-group">
                         <label for="name">Nom :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($category) ? htmlentities($category['name']) : $name; ?>" type="text" placeholder="Nom" name="name" id="name">
-                        <span style="color: red;"><?= isset($messages['name']) ? $messages['name'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['name']) ? $messages['name'] : ''; ?></span>
                     </div>
                     <div class="text-right">
                         <?php if (isset($category)): ?>

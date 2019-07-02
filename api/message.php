@@ -1,10 +1,6 @@
 <?php
 
-try {
-    $db = new PDO('mysql:host=hamrounivcdb.mysql.db;dbname=hamrounivcdb;charset=utf8', 'hamrounivcdb', 'Achraf93', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-} catch (Exception $exception) {
-    die('Erreur : ' . $exception->getMessage());
-}
+require_once('../tools/common.php');
 
 header("Access-Control-Allow-Origin: *");
 
@@ -20,40 +16,35 @@ $messages = [];
 
 if (empty($name)) {
     $messages['name'] = 'Le nom est obligatoire !';
-    //$res->msg = $messages;
 }
 if (empty($firstname)) {
     $messages['firstname'] = 'Le prénom est obligatoire !';
-    //$res->msg = $messages;
 }
 if (empty($email)) {
     $messages['emailMess'] = 'L\'email est obligatoire !';
-    //$res->msg = $messages;
 }
 if (empty($message)) {
     $messages['message'] = 'Le message est obligatoire !';
-    //$res->msg = $messages;
 }
 if (isset($choiceOne) AND $choiceOne == 'Choisissez...') {
     $messages['choiceOne'] = 'Le premier choix est obligatoire !';
-    //$res->msg = $messages;
 }
 if (!empty($choiceOne) AND $choiceOne != 'Choisissez...') {
     if (isset($choiceTwo) AND $choiceTwo == 'Choisissez...') {
         $messages['choiceTwo'] = 'Le deuxième choix est obligatoire !';
     }
 }
-if (isset($email) AND !preg_match(" /^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/ ", $email)) {
+if (!empty($email) AND !preg_match(" /^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/ ", $email)) {
         $messages['validEmail'] = "L'adresse email est invalide !";
 }
 if (empty($messages)) {
     $queryInsert = $db->prepare('INSERT INTO messages (name, firstname, email, mobile, message, first_choice_id, second_choice_id, send_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())');
     $sendValues = $queryInsert->execute([
-        $name,
-        $firstname,
-        $email,
-        $mobile,
-        $message,
+        htmlspecialchars($name),
+        htmlspecialchars($firstname),
+        htmlspecialchars($email),
+        htmlspecialchars($mobile),
+        htmlspecialchars($message),
         $choiceOne,
         $choiceTwo
     ]);

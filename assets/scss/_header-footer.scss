@@ -6,7 +6,25 @@
   z-index: 1000;
   box-shadow: 0 0 2px 2px lightgrey;
 }
-
+.mdpForgot{
+  font-size: 12px;
+  margin-top: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+#backForm{
+  font-size: 12px;
+  margin-top: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+.formForgot{
+  display: none;
+  justify-content: center;
+  padding: 20px;
+  flex-direction: column;
+  align-items: center;
+}
 ul, li {
   list-style-type: none;
   display: inline-block;

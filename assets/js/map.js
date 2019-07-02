@@ -41,6 +41,5 @@ services.forEach(function (service) {
     service.addEventListener('click', function () {
         map.style.display = 'block'
         initMap(service.getAttribute('data-lat'), service.getAttribute('data-long'), service.getAttribute('data-name'), service.getAttribute('data-schedule'), service.getAttribute('data-address'))
-    console.log(service)
     })
 })

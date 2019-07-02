@@ -31,22 +31,21 @@ if (isset($_POST['save'])) {
     }
     if (empty($messages)) {
         do {
-            $new_file_name = rand();
+            $new_file_name = md5(rand());
             $destination = '../assets/img/events/' . $new_file_name . '.' . $my_file_extension;
         } while (file_exists($destination));
 
         $result = move_uploaded_file($_FILES['image']['tmp_name'], $destination);
 
-
         $query = $db->prepare('INSERT INTO events (title, content, summary, is_published, published_at, image, video) VALUES (?, ?, ?, ?, ?, ?, ?)');
         $newEvent = $query->execute([
-            $_POST['title'],
-            $_POST['content'],
-            $_POST['summary'],
+            htmlspecialchars($_POST['title']),
+            htmlspecialchars($_POST['content']),
+            htmlspecialchars($_POST['summary']),
             $_POST['is_published'],
-            $_POST['published_at'],
-            $new_file_name . '.' . $my_file_extension,
-            $_POST['video']
+            htmlspecialchars($_POST['published_at']),
+            htmlspecialchars($new_file_name . '.' . $my_file_extension),
+            htmlspecialchars($_POST['video'])
         ]);
 
         if ($newEvent) {
@@ -95,7 +94,7 @@ if (isset($_POST['update'])) {
     if (empty($messages)) {
         if ($_FILES['image']['error'] == 0){
             do {
-                $new_file_name = rand();
+                $new_file_name = md5(rand());
                 $destination = '../assets/img/events/' . $new_file_name . '.' . $my_file_extension;
                 $image = $new_file_name . '.' . $my_file_extension;
             } while (file_exists($destination));
@@ -103,7 +102,7 @@ if (isset($_POST['update'])) {
             $image = $_POST['imgExist'];
         }
 
-        $query = $db->prepare('UPDATE events SET
+        $queryUpdt = $db->prepare('UPDATE events SET
 		title = :title,
 		content = :content,
 		summary = :summary,
@@ -113,14 +112,14 @@ if (isset($_POST['update'])) {
 		video = :video
 		WHERE id = :id');
 
-        $resultEvent = $query->execute([
-            'title' => $_POST['title'],
-            'content' => $_POST['content'],
-            'summary' => $_POST['summary'],
+        $resultEvent = $queryUpdt->execute([
+            'title' => htmlspecialchars($_POST['title']),
+            'content' => htmlspecialchars($_POST['content']),
+            'summary' => htmlspecialchars($_POST['summary']),
             'is_published' => $_POST['is_published'],
-            'published_at' => $_POST['published_at'],
-            'image' => $image,
-            'video' => $_POST['video'],
+            'published_at' => htmlspecialchars($_POST['published_at']),
+            'image' => htmlspecialchars($image),
+            'video' => htmlspecialchars($_POST['video']),
             'id' => $_POST['id']
         ]);
 
@@ -143,8 +142,8 @@ if (isset($_POST['update'])) {
 
 
 if (isset($_POST['add_image'])) {
-    $allowed_extensions = array('jpg', 'jpeg', 'gif', 'png');
-    $my_file_extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+    $allowed_extensions = array('jpg', 'jpeg', 'png');
+    $my_file_extension = pathinfo($_FILES['imageMulti']['name'], PATHINFO_EXTENSION);
 
     if (!in_array($my_file_extension, $allowed_extensions)) {
         $messages['extension'] = 'L\'extention est invalide !';
@@ -154,20 +153,24 @@ if (isset($_POST['add_image'])) {
             $destination = '../assets/img/events/' . $new_file_name . '.' . $my_file_extension;
         } while (file_exists($destination));
 
-        $result = move_uploaded_file($_FILES['image']['tmp_name'], $destination);
+        $result = move_uploaded_file($_FILES['imageMulti']['tmp_name'], $destination);
+
         $query = $db->prepare('INSERT INTO images (caption, name, event_id) VALUES (?, ?, ?)');
         $newImage = $query->execute([
             htmlspecialchars($_POST['caption']),
             $new_file_name . '.' . $my_file_extension,
             $_POST['event_id']
         ]);
+        if ($newImage){
+            $_SESSION['message'] = '<div class="bg-success text-white p-2 mb-4">Image ajouté avec succès !</div>';
+        }
     }
 }
 
 if (isset($_POST['delete_image'])) {
-    $query = $db->prepare('SELECT name FROM images WHERE id = ?');
-    $query->execute(array($_POST['img_id']));
-    $imgToUnlink = $query->fetch();
+    $querySlc = $db->prepare('SELECT name FROM images WHERE id = ?');
+    $querySlc->execute(array($_POST['img_id']));
+    $imgToUnlink = $querySlc->fetch();
 
     if ($imgToUnlink) {
         unlink('../assets/img/events/' . $imgToUnlink['name']);
@@ -179,13 +182,13 @@ if (isset($_POST['delete_image'])) {
 
 
 if (isset($_GET['event_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
-    $query = $db->prepare('SELECT * FROM events WHERE id = ?');
-    $query->execute(array($_GET['event_id']));
-    $event = $query->fetch();
+    $queryEvent = $db->prepare('SELECT * FROM events WHERE id = ?');
+    $queryEvent->execute(array($_GET['event_id']));
+    $event = $queryEvent->fetch();
 
-    $query = $db->prepare('SELECT * FROM images WHERE event_id = ?');
-    $query->execute(array($_GET['event_id']));
-    $eventImages = $query->fetchAll();
+    $queryImgs = $db->prepare('SELECT * FROM images WHERE event_id = ?');
+    $queryImgs->execute(array($_GET['event_id']));
+    $eventImages = $queryImgs->fetchAll();
 }
 
 if(isset($_GET['event_id']) AND $_GET['event_id'] !== $event['id']) {
@@ -246,7 +249,7 @@ if(isset($_GET['event_id']) AND $_GET['event_id'] !== $event['id']) {
                                 <input class="form-control"
                                        value="<?= isset($event) ? htmlentities($event['title']) : $title; ?>" type="text"
                                        placeholder="Titre" name="title" id="title"/>
-                                <span style="color: red;"><?= isset($messages['title']) ? $messages['title'] : ''; ?></span>
+                                <span class="text-danger"><?= isset($messages['title']) ? $messages['title'] : ''; ?></span>
                             </div>
                             <div class="form-group">
                                 <label for="summary">Résumé :</label>
@@ -255,7 +258,7 @@ if(isset($_GET['event_id']) AND $_GET['event_id'] !== $event['id']) {
                             <div class="form-group">
                                 <label for="content">Contenu :<span class="text-danger">*</span></label>
                                 <textarea class="form-control" name="content" id="content" placeholder="Contenu"><?= isset($event) ? htmlentities($event['content']) : $content; ?></textarea>
-                                <span style="color: red;"><?= isset($messages['content']) ? $messages['content'] : ''; ?></span>
+                                <span class="text-danger"><?= isset($messages['content']) ? $messages['content'] : ''; ?></span>
                             </div>
 
                             <div class="form-group">
@@ -265,8 +268,8 @@ if(isset($_GET['event_id']) AND $_GET['event_id'] !== $event['id']) {
                                     <img style="width: 50%;" class="img-fluid py-4"
                                          src="../assets/img/events/<?= isset($event) ? $event['image'] : $image; ?>" alt="">
                                 <?php endif; ?>
-                                <span style="color: red;"><?= isset($messages['image']) ? $messages['image'] : ''; ?></span>
-                                <span style="color: red;"><?= isset($messages['imageExt']) ? $messages['imageExt'] : ''; ?></span>
+                                <span class="text-danger"><?= isset($messages['image']) ? $messages['image'] : ''; ?></span>
+                                <span class="text-danger"><?= isset($messages['imageExt']) ? $messages['imageExt'] : ''; ?></span>
                             </div>
 
                             <div class="form-group">
@@ -279,7 +282,7 @@ if(isset($_GET['event_id']) AND $_GET['event_id'] !== $event['id']) {
                                 <input class="form-control"
                                        value="<?= isset($event) ? htmlentities($event['published_at']) : $published_at; ?>"
                                        type="date" placeholder="Résumé" name="published_at" id="published_at"/>
-                                <span style="color: red;"><?= isset($messages['published_at']) ? $messages['published_at'] : ''; ?></span>
+                                <span class="text-danger"><?= isset($messages['published_at']) ? $messages['published_at'] : ''; ?></span>
                             </div>
 
                             <div class="form-group">
@@ -322,8 +325,8 @@ if(isset($_GET['event_id']) AND $_GET['event_id'] !== $event['id']) {
                                        id="caption"/>
                             </div>
                             <div class="form-group">
-                                <label for="image">Fichier :</label>
-                                <input class="form-control" type="file" name="image" id="image"/>
+                                <label for="imageMulti">Fichier :</label>
+                                <input class="form-control" type="file" name="imageMulti" id="imageMulti"/>
                             </div>
 
                             <input type="hidden" name="event_id" value="<?= $event['id']; ?>"/>

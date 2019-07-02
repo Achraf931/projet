@@ -15,8 +15,8 @@ if (isset($_POST['save'])) {
     if (empty($messages)) {
         $queryInsert = $db->prepare('INSERT INTO notices (title, content) VALUES (?, ?)');
         $newNotice = $queryInsert->execute([
-            $_POST['title'],
-            $_POST['content']
+            htmlspecialchars($_POST['title']),
+            htmlspecialchars($_POST['content'])
         ]);
 
         if ($newNotice) {
@@ -41,14 +41,14 @@ if (isset($_POST['update'])) {
         $messages['content'] = 'Le contenu est obligatoire !';
     }
     if (empty($messages)) {
-        $query = $db->prepare('UPDATE notices SET
+        $queryUpdt = $db->prepare('UPDATE notices SET
 		title = :title,
 		content = :content
 		WHERE id = :id');
 
-        $resultNotice = $query->execute([
-            'title' => $_POST['title'],
-            'content' => $_POST['content'],
+        $resultNotice = $queryUpdt->execute([
+            'title' => htmlspecialchars($_POST['title']),
+            'content' => htmlspecialchars($_POST['content']),
             'id' => $_POST['id']
         ]);
 
@@ -101,12 +101,12 @@ if(isset($_GET['notice_id']) AND $_GET['notice_id'] !== $notice['id']) {
                     <div class="form-group">
                         <label for="title">Titre :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($notice) ? htmlentities($notice['title']) : $title; ?>" type="text" placeholder="Titre" name="title" id="title">
-                        <span style="color: red;"><?= isset($messages['title']) ? $messages['title'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['title']) ? $messages['title'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="content">Contenu :<span class="text-danger">*</span></label>
                         <textarea class="form-control" type="text" placeholder="Contenu" name="content" id="content"><?= isset($notice) ? htmlentities($notice['content']) : $content; ?></textarea>
-                        <span style="color: red;"><?= isset($messages['content']) ? $messages['content'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['content']) ? $messages['content'] : ''; ?></span>
                     </div>
 
                     <div class="text-right">

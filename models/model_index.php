@@ -28,7 +28,6 @@ function getOneEvent($eventId, $title = false){
     if ($title){
         $event = $db->prepare('SELECT title FROM events WHERE id = ? AND published_at AND is_published = 1');
         $event->execute(array($eventId));
-
         return $event->fetchColumn();
     } else{
         $event = $db->prepare('SELECT title, published_at, content, id, image, video FROM events WHERE id = ? AND published_at AND is_published = 1');

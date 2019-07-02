@@ -35,7 +35,7 @@ if (isset($_POST['save'])) {
     }
     if (empty($messages)) {
         do {
-            $new_file_name = rand();
+            $new_file_name = md5(rand());
             $destination = '../assets/img/services/' . $new_file_name . '.' . $my_file_extension;
         } while (file_exists($destination));
 
@@ -44,12 +44,12 @@ if (isset($_POST['save'])) {
 
         $queryInsert = $db->prepare('INSERT INTO services (name, image, schedule, address, lat, long) VALUES (?, ?, ?, ?, ?, ?)');
         $newService = $queryInsert->execute([
-            $_POST['name'],
-            $new_file_name . '.' . $my_file_extension,
-            $_POST['schedule'],
-            $_POST['address'],
-            $_POST['lat'],
-            $_POST['long']
+            htmlspecialchars($_POST['name']),
+            htmlspecialchars($new_file_name . '.' . $my_file_extension),
+            htmlspecialchars($_POST['schedule']),
+            htmlspecialchars($_POST['address']),
+            htmlspecialchars($_POST['lat']),
+            htmlspecialchars($_POST['long'])
         ]);
 
         if ($newService) {
@@ -82,10 +82,10 @@ if (isset($_POST['update'])) {
     if (empty($_POST['name'])) {
         $messages['name'] = 'Le nom est obligatoire !';
     }
-    if (!isset($_FILES['image']) OR empty($_FILES['image'])) {
+    if ($_FILES['image']['error'] !== 0) {
         $messages['image'] = 'L\'image est obligatoire !';
     }
-    if (isset($_POST['image']) AND !in_array($my_file_extension, $allowed_extensions)) {
+    if ($_FILES['image']['error'] == 0 AND !in_array($my_file_extension, $allowed_extensions)) {
         $messages['imageExt'] = 'L\'extension est invalide !';
     }
     if (empty($_POST['schedule'])) {
@@ -104,13 +104,13 @@ if (isset($_POST['update'])) {
         $destination = '../assets/img/services/';
         unlink($destination . $recupImage['image']);
         do {
-            $new_file_name = rand();
+            $new_file_name = md5(rand());
             $destination = '../assets/img/services/' . $new_file_name . '.' . $my_file_extension;
         } while (file_exists($destination));
 
         $result = move_uploaded_file($_FILES['image']['tmp_name'], $destination);
 
-        $query = $db->prepare('UPDATE services SET
+        $queryUpdt = $db->prepare('UPDATE services SET
 		name = :name,
 		image = :image,
 		schedule = :schedule,
@@ -119,13 +119,13 @@ if (isset($_POST['update'])) {
 		long = :long,
 		WHERE id = :id');
 
-        $resultService = $query->execute([
-            'name' => $_POST['name'],
-            'image' => $new_file_name . '.' . $my_file_extension,
-            'schedule' => $_POST['schedule'],
-            'address' => $_POST['address'],
-            'lat' => $_POST['lat'],
-            'long' => $_POST['long'],
+        $resultService = $queryUpdt->execute([
+            'name' => htmlspecialchars($_POST['name']),
+            'image' => htmlspecialchars($new_file_name . '.' . $my_file_extension),
+            'schedule' => htmlspecialchars($_POST['schedule']),
+            'address' => htmlspecialchars($_POST['address']),
+            'lat' => htmlspecialchars($_POST['lat']),
+            'long' => htmlspecialchars($_POST['long']),
             'id' => $_POST['id']
         ]);
 
@@ -178,7 +178,7 @@ if(isset($_GET['service_id']) AND $_GET['service_id'] !== $service['id']) {
                     <div class="form-group">
                         <label for="name">Nom :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($service) ? htmlentities($service['name']) : $name; ?>" type="text" placeholder="Nom" name="name" id="name">
-                        <span style="color: red;"><?= isset($messages['name']) ? $messages['name'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['name']) ? $messages['name'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="image">Image :<span class="text-danger">*</span></label>
@@ -187,28 +187,28 @@ if(isset($_GET['service_id']) AND $_GET['service_id'] !== $service['id']) {
                             <img style="width: 50%;" class="img-fluid py-4"
                                  src="../assets/img/services/<?= isset($service) ? $service['image'] : ''; ?>" alt="">
                         <?php endif; ?>
-                        <span style="color: red;"><?= isset($messages['image']) ? $messages['image'] : ''; ?></span>
-                        <span style="color: red;"><?= isset($messages['imageExt']) ? $messages['imageExt'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['image']) ? $messages['image'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['imageExt']) ? $messages['imageExt'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="schedule">Horaires :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($service) ? htmlentities($service['schedule']) : $schedule; ?>" type="text" placeholder="Horaires" name="schedule" id="schedule">
-                        <span style="color: red;"><?= isset($messages['schedule']) ? $messages['schedule'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['schedule']) ? $messages['schedule'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="address">Adresse :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($service) ? htmlentities($service['address']) : $address; ?>" type="text" placeholder="Adresse" name="address" id="address">
-                        <span style="color: red;"><?= isset($messages['address']) ? $messages['address'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['address']) ? $messages['address'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="lat">Latitude :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($service) ? htmlentities($service['lat']) : $lat; ?>" type="text" placeholder="Latitude" name="lat" id="lat">
-                        <span style="color: red;"><?= isset($messages['lat']) ? $messages['lat'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['lat']) ? $messages['lat'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="long">Longitude :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($service) ? htmlentities($service['long']) : $long; ?>" type="text" placeholder="Longitude" name="long" id="long">
-                        <span style="color: red;"><?= isset($messages['long']) ? $messages['long'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['long']) ? $messages['long'] : ''; ?></span>
                     </div>
                     <div class="text-right">
                         <?php if (isset($service)): ?>

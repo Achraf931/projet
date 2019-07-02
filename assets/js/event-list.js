@@ -3,7 +3,7 @@ let sendDate = function (date, type) {
         date: date,
         type: type,
     }
-    fetch('api/events-list.php', {
+    fetch('./api/events-list.php', {
         method: 'POST',
         headers: new Headers(),
         body: JSON.stringify(object)

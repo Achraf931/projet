@@ -34,7 +34,7 @@ if (isset($_POST['save'])) {
     }
     if (empty($messages)) {
         do {
-            $new_file_name = rand();
+            $new_file_name = md5(rand());
             $destination = '../assets/bills/' . $new_file_name . '.' . $my_file_extension;
         } while (file_exists($destination));
 
@@ -42,12 +42,12 @@ if (isset($_POST['save'])) {
 
         $queryInsert = $db->prepare('INSERT INTO bills (number, services, amount, date, status, bill, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)');
         $newBill = $queryInsert->execute([
-            $_POST['number'],
-            $_POST['services'],
-            $_POST['amount'],
-            $_POST['date'],
-            $_POST['status'],
-            $new_file_name . '.' . $my_file_extension,
+            htmlspecialchars($_POST['number']),
+            htmlspecialchars($_POST['services']),
+            htmlspecialchars($_POST['amount']),
+            htmlspecialchars($_POST['date']),
+            htmlspecialchars($_POST['status']),
+            htmlspecialchars($new_file_name . '.' . $my_file_extension),
             $_POST['users']
         ]);
 
@@ -101,16 +101,16 @@ if (isset($_POST['update'])) {
     if (empty($messages)) {
         if ($_FILES['pdfBill']['error'] == 0) {
             do {
-                $new_file_name = rand();
+                $new_file_name = md5(rand());
                 $destination = '../assets/bills/' . $new_file_name . '.' . $my_file_extension;
                 $pdfBill = $new_file_name . '.' . $my_file_extension;
             } while (file_exists($destination));
-        } else{
-                $pdfBill = $_POST['pdfExist'];
-            }
+        } else {
+            $pdfBill = $_POST['pdfExist'];
+        }
 
 
-        $query = $db->prepare('UPDATE bills SET
+        $queryUpdt = $db->prepare('UPDATE bills SET
 		number = :number,
 		services = :services,
 		amount = :amount,
@@ -120,22 +120,22 @@ if (isset($_POST['update'])) {
 		user_id = :user_id
 		WHERE id = :id');
 
-        $resultBill = $query->execute([
-            'number' => $_POST['number'],
-            'services' => $_POST['services'],
-            'amount' => $_POST['amount'],
-            'date' => $_POST['date'],
-            'status' => $_POST['status'],
-            'bill' => $pdfBill,
+        $resultBill = $queryUpdt->execute([
+            'number' => htmlspecialchars($_POST['number']),
+            'services' => htmlspecialchars($_POST['services']),
+            'amount' => htmlspecialchars($_POST['amount']),
+            'date' => htmlspecialchars($_POST['date']),
+            'status' => htmlspecialchars($_POST['status']),
+            'bill' => htmlspecialchars($pdfBill),
             'user_id' => $_POST['users'],
             'id' => $_POST['id']
         ]);
 
-            if ($pdfBill != $_POST['pdfExist']) {
-                $pathPdf = '../assets/bills/';
-                unlink($pathPdf . $recupBill['bill']);
-                move_uploaded_file($_FILES['pdfBill']['tmp_name'], $destination);
-            }
+        if ($pdfBill != $_POST['pdfExist']) {
+            $pathPdf = '../assets/bills/';
+            unlink($pathPdf . $recupBill['bill']);
+            move_uploaded_file($_FILES['pdfBill']['tmp_name'], $destination);
+        }
         if ($resultBill) {
             $_SESSION['message'] = 'Facture mise à jour !';
             header('location:bills-list.php');
@@ -148,15 +148,15 @@ if (isset($_POST['update'])) {
 
 if (isset($_GET['bill_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
 
-    $query = $db->prepare('SELECT * FROM bills WHERE id = ?');
-    $query->execute(array($_GET['bill_id']));
-    $bill = $query->fetch();
+    $queryBills = $db->prepare('SELECT * FROM bills WHERE id = ?');
+    $queryBills->execute(array($_GET['bill_id']));
+    $bill = $queryBills->fetch();
 
-    $query = $db->query('SELECT name, firstname, id FROM users');
-    $listUsers = $query->fetchAll();
+    $querySlc = $db->query('SELECT name, firstname, id FROM users');
+    $listUsers = $querySlc->fetchAll();
 }
 
-if(isset($_GET['bill_id']) AND $_GET['bill_id'] !== $bill['id']) {
+if (isset($_GET['bill_id']) AND $_GET['bill_id'] !== $bill['id']) {
     header('Location:bills-list.php');
     exit;
 }
@@ -182,51 +182,61 @@ if(isset($_GET['bill_id']) AND $_GET['bill_id'] !== $bill['id']) {
         <div class="card-body">
             <h4><?php if (isset($bill)): ?>Modifier<?php else: ?>Ajouter<?php endif; ?> une facture</h4>
             <?php if (isset($_GET['bill_id'])): ?>
-            <form action="bills-form.php?bill_id=<?= $bill['id']; ?>&action=edit" method="post" enctype="multipart/form-data">
+            <form action="bills-form.php?bill_id=<?= $bill['id']; ?>&action=edit" method="post"
+                  enctype="multipart/form-data">
                 <?php else: ?>
                 <form action="bills-form.php" method="post" enctype="multipart/form-data">
                     <?php endif; ?>
                     <div class="form-group">
                         <label for="number">Numéro de facture :<span class="text-danger">*</span></label>
-                        <input class="form-control" value="<?= isset($bill) ? htmlentities($bill['number']) : $number; ?>" type="number" placeholder="Numéro" name="number" id="number"/>
-                        <span style="color: red;"><?= isset($messages['number']) ? $messages['number'] : ''; ?></span>
+                        <input class="form-control"
+                               value="<?= isset($bill) ? htmlentities($bill['number']) : $number; ?>" type="number"
+                               placeholder="Numéro" name="number" id="number"/>
+                        <span class="text-danger"><?= isset($messages['number']) ? $messages['number'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="services">Services :<span class="text-danger">*</span></label>
-                        <input class="form-control" value="<?= isset($bill) ? htmlentities($bill['services']) : $services; ?>" type="text" placeholder="Services" name="services" id="services"/>
-                        <span style="color: red;"><?= isset($messages['services']) ? $messages['services'] : ''; ?></span>
+                        <input class="form-control"
+                               value="<?= isset($bill) ? htmlentities($bill['services']) : $services; ?>" type="text"
+                               placeholder="Services" name="services" id="services"/>
+                        <span class="text-danger"><?= isset($messages['services']) ? $messages['services'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="amount">Montant :<span class="text-danger">*</span></label>
-                        <input class="form-control" value="<?= isset($bill) ? htmlentities($bill['amount']) : $amount; ?>" type="number" placeholder="Montant" name="amount" id="amount"/>
-                        <span style="color: red;"><?= isset($messages['amount']) ? $messages['amount'] : ''; ?></span>
+                        <input class="form-control"
+                               value="<?= isset($bill) ? htmlentities($bill['amount']) : $amount; ?>" type="number"
+                               placeholder="Montant" name="amount" id="amount"/>
+                        <span class="text-danger"><?= isset($messages['amount']) ? $messages['amount'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="date">Date :<span class="text-danger">*</span></label>
-                        <input class="form-control" value="<?= isset($bill) ? htmlentities($bill['date']) : $date; ?>" type="date" placeholder="Date" name="date" id="date"/>
-                        <span style="color: red;"><?= isset($messages['date']) ? $messages['date'] : ''; ?></span>
+                        <input class="form-control" value="<?= isset($bill) ? htmlentities($bill['date']) : $date; ?>"
+                               type="date" placeholder="Date" name="date" id="date"/>
+                        <span class="text-danger"><?= isset($messages['date']) ? $messages['date'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="pdfBill">Facture :<span class="text-danger">*</span></label>
-                        <input class="form-control" value="<?= isset($service) ? htmlentities($service['pdfBill']) : ''; ?>" type="file" name="pdfBill" id="pdfBill">
-                        <?php if (isset($service['pdfBill']) AND !empty($service['pdfBill'])): ?>
-                            <img style="width: 50%;" class="img-fluid py-4" src="../assets/bills/<?= isset($service) ? $service['pdfBill'] : ''; ?>" alt="">
+                        <input class="form-control" value="<?= isset($bill) ? htmlentities($bill['pdfBill']) : ''; ?>"
+                               type="file" name="pdfBill" id="pdfBill">
+                        <?php if (isset($bill['pdfBill']) AND !empty($bill['pdfBill'])): ?>
+                            <img style="width: 50%;" class="img-fluid py-4"
+                                 src="../assets/bills/<?= isset($bill) ? $bill['pdfBill'] : ''; ?>" alt="">
                         <?php endif; ?>
-                        <span style="color: red;"><?= isset($messages['pdfBill']) ? $messages['pdfBill'] : ''; ?></span>
-                        <span style="color: red;"><?= isset($messages['pdfBillExt']) ? $messages['pdfBillExt'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['pdfBill']) ? $messages['pdfBill'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['pdfBillExt']) ? $messages['pdfBillExt'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="users">Utilisateurs : </label>
                         <select class="form-control" name="users" id="users">
                             <?php
-                            $queryUsers = $db ->query('SELECT * FROM users');
+                            $queryUsers = $db->query('SELECT * FROM users');
                             $users = $queryUsers->fetchAll();
                             ?>
-                            <?php foreach($users as $key => $user) : ?>
-                                <option value="<?= $user['id']; ?>" <?= isset($bill) && $bill['user_id'] == $user['id'] ? 'selected' : '';?>> <?= $user['name'] .' ' . $user['firstname']; ?> </option>
+                            <?php foreach ($users as $key => $user) : ?>
+                                <option value="<?= $user['id']; ?>" <?= isset($bill) && $bill['user_id'] == $user['id'] ? 'selected' : ''; ?>> <?= $user['name'] . ' ' . $user['firstname']; ?> </option>
                             <?php endforeach; ?>
                         </select>
-                        <span style="color: red;"><?= isset($messages['users']) ? $messages['users'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['users']) ? $messages['users'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="status">Statut ?</label>
@@ -238,7 +248,7 @@ if(isset($_GET['bill_id']) AND $_GET['bill_id'] !== $bill['id']) {
                                 Oui
                             </option>
                         </select>
-                        <span style="color: red;"><?= isset($messages['status']) ? $messages['status'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['status']) ? $messages['status'] : ''; ?></span>
                     </div>
 
                     <div class="text-right">

@@ -15,8 +15,8 @@ if (isset($_POST['save'])) {
     if (empty($messages)) {
         $queryInsert = $db->prepare('INSERT INTO faq (question, response, category_id) VALUES (?, ?, ?)');
         $newFaq = $queryInsert->execute([
-            $_POST['question'],
-            $_POST['response'],
+            htmlspecialchars($_POST['question']),
+            htmlspecialchars($_POST['response']),
             $_POST['categories']
         ]);
 
@@ -42,15 +42,15 @@ if (isset($_POST['update'])) {
         $messages['response'] = 'La réponse est obligatoire !';
     }
     if (empty($messages)) {
-        $query = $db->prepare('UPDATE faq SET
+        $queryUpdt = $db->prepare('UPDATE faq SET
 		question = :question,
 		response = :response,
 		category_id = :categories
 		WHERE id = :id');
 
-        $resultFaq = $query->execute([
-            'question' => $_POST['question'],
-            'response' => $_POST['response'],
+        $resultFaq = $queryUpdt->execute([
+            'question' => htmlspecialchars($_POST['question']),
+            'response' => htmlspecialchars($_POST['response']),
             'categories' => $_POST['categories'],
             'id' => $_POST['id']
         ]);
@@ -66,9 +66,9 @@ if (isset($_POST['update'])) {
 
 if (isset($_GET['faq_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
 
-    $query = $db->prepare('SELECT * FROM faq WHERE id = ?');
-    $query->execute(array($_GET['faq_id']));
-    $faq = $query->fetch();
+    $querySlc = $db->prepare('SELECT * FROM faq WHERE id = ?');
+    $querySlc->execute(array($_GET['faq_id']));
+    $faq = $querySlc->fetch();
 }
 
 if(isset($_GET['faq_id']) AND $_GET['faq_id'] !== $faq['id']) {
@@ -114,17 +114,16 @@ if(isset($_GET['faq_id']) AND $_GET['faq_id'] !== $faq['id']) {
                                 <option value="<?= $category['id']; ?>" <?= isset($faq) && $faq['category_id'] == $category['id'] ? 'selected' : '';?>> <?= $category['name'] ?> </option>
                             <?php endforeach; ?>
                         </select>
-                        <span style="color: red;"><?= isset($messages['question']) ? $messages['question'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="question">Question :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($faq) ? htmlentities($faq['question']) : $question; ?>" type="text" placeholder="Question" name="question" id="question">
-                        <span style="color: red;"><?= isset($messages['question']) ? $messages['question'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['question']) ? $messages['question'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="response">Réponse :<span class="text-danger">*</span></label>
                         <textarea class="form-control" type="text" placeholder="Réponse" name="response" id="response"><?= isset($faq) ? htmlentities($faq['response']) : $response; ?></textarea>
-                        <span style="color: red;"><?= isset($messages['response']) ? $messages['response'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['response']) ? $messages['response'] : ''; ?></span>
                     </div>
                     <div class="text-right">
                         <?php if (isset($faq)): ?>

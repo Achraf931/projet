@@ -52,25 +52,23 @@ if (isset($_POST['save'])) {
 
         $queryInsert = $db->prepare('INSERT INTO users (name, firstname, birthdate, address, city, zipcode, mobile, email, admin, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $newUser = $queryInsert->execute([
-            $_POST['name'],
-            $_POST['firstname'],
-            $_POST['birthdate'],
-            $_POST['address'],
-            $_POST['city'],
-            $_POST['zipcode'],
-            $_POST['mobile'],
-            $_POST['email'],
+            htmlspecialchars($_POST['name']),
+            htmlspecialchars($_POST['firstname']),
+            htmlspecialchars($_POST['birthdate']),
+            htmlspecialchars($_POST['address']),
+            htmlspecialchars($_POST['city']),
+            htmlspecialchars($_POST['zipcode']),
+            htmlspecialchars($_POST['mobile']),
+            htmlspecialchars($_POST['email']),
             $_POST['admin'],
-            hash('md5', $password)
+            htmlspecialchars(hash('md5', $password))
         ]);
 
         if ($newUser) {
             $to = $_POST['email'];
             $subject = "Votre mot de passe";
             $txt = 'Votre mot de passe est : ' . $password;
-            $headers = "From: Mairie de Montreuil" . "\r\n" .
-                "CC: hamrouni.pro@outlook.fr";
-
+            $headers = "From: Mairie de Montreuil";
             mail($to,$subject,$txt,$headers);
 
 
@@ -120,7 +118,7 @@ if (isset($_POST['update'])) {
         $messages['emailExist'] = 'l\'adresse email est déjà existante !';
     }
     if (empty($messages)) {
-        $query = $db->prepare('UPDATE users SET
+        $queryUpdt = $db->prepare('UPDATE users SET
 		name = :name,
 		firstname = :firstname,
 		birthdate = :birthdate,
@@ -130,13 +128,13 @@ if (isset($_POST['update'])) {
 		admin = :admin
 		WHERE id = :id');
 
-        $resultUser = $query->execute([
-            'name' => $_POST['name'],
-            'firstname' => $_POST['firstname'],
-            'birthdate' => $_POST['birthdate'],
-            'address' => $_POST['address'],
-            'email' => $_POST['email'],
-            'mobile' => $_POST['mobile'],
+        $resultUser = $queryUpdt->execute([
+            'name' => htmlspecialchars($_POST['name']),
+            'firstname' => htmlspecialchars($_POST['firstname']),
+            'birthdate' => htmlspecialchars($_POST['birthdate']),
+            'address' => htmlspecialchars($_POST['address']),
+            'email' => htmlspecialchars($_POST['email']),
+            'mobile' => htmlspecialchars($_POST['mobile']),
             'admin' => $_POST['admin'],
             'id' => $_POST['id']
         ]);
@@ -191,39 +189,39 @@ if(isset($_GET['user_id']) AND $_GET['user_id'] !== $user['id']) {
                     <div class="form-group">
                         <label for="name">Nom :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($user) ? htmlentities($user['name']) : $name; ?>" type="text" placeholder="Nom" name="name" id="name"/>
-                        <span style="color: red;"><?= isset($messages['name']) ? $messages['name'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['name']) ? $messages['name'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="firstname">Prénom :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($user) ? htmlentities($user['firstname']) : $firstname; ?>" type="text" placeholder="Prénom" name="firstname" id="firstname"/>
-                        <span style="color: red;"><?= isset($messages['firstname']) ? $messages['firstname'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['firstname']) ? $messages['firstname'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="birthdate">Date de naissance :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($user) ? htmlentities($user['birthdate']) : $birthdate; ?>" type="date" placeholder="Date de naissance" name="birthdate" id="birthdate"/>
-                        <span style="color: red;"><?= isset($messages['birthdate']) ? $messages['birthdate'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['birthdate']) ? $messages['birthdate'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="address">Adresse :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($user) ? htmlentities($user['address']) : $address; ?>" type="text" placeholder="Adresse postale" name="address" id="address"/>
-                        <span style="color: red;"><?= isset($messages['address']) ? $messages['address'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['address']) ? $messages['address'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="city">Ville :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($user) ? htmlentities($user['city']) : $city; ?>" type="text" placeholder="Ville" name="city" id="city"/>
-                        <span style="color: red;"><?= isset($messages['city']) ? $messages['city'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['city']) ? $messages['city'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="zipcode">Code postal :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($user) ? htmlentities($user['zipcode']) : $zipcode; ?>" type="number" placeholder="Code postal" name="zipcode" id="zipcode"/>
-                        <span style="color: red;"><?= isset($messages['zipcode']) ? $messages['zipcode'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['zipcode']) ? $messages['zipcode'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="email">Email :<span class="text-danger">*</span></label>
                         <input class="form-control" value="<?= isset($user) ? htmlentities($user['email']) : $email; ?>" type="email" placeholder="Adresse email" name="email" id="email"/>
-                        <span style="color: red;"><?= isset($messages['email']) ? $messages['email'] : ''; ?></span>
-                        <span style="color: red;"><?= isset($messages['validEmail']) ? $messages['validEmail'] : ''; ?></span>
-                        <span style="color: red;"><?= isset($messages['emailExist']) ? $messages['emailExist'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['email']) ? $messages['email'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['validEmail']) ? $messages['validEmail'] : ''; ?></span>
+                        <span class="text-danger"><?= isset($messages['emailExist']) ? $messages['emailExist'] : ''; ?></span>
                     </div>
                     <div class="form-group">
                         <label for="mobile">Numéro de téléphone :</label>

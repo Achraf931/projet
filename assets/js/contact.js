@@ -12,7 +12,7 @@ let sendValue = function (value) {
     let object = new FormData()
     object.append('value', value)
 
-    fetch('api/contact.php', {
+    fetch('./api/contact.php', {
         method: 'POST',
         headers: new Headers(),
         body: object
@@ -43,29 +43,25 @@ let sendValue = function (value) {
 }
 
 sendMessage.addEventListener('click', function () {
+    document.querySelectorAll('.errorsMsg').forEach(function (e) {
+        e.innerText = ""
+    })
     recupMess()
     msgSuccess.innerText = ""
+
 })
 const recupMess = function(){
-    let name = document.querySelector('#name').value
-    let firstname = document.querySelector('#firstname').value
-    let email = document.querySelector('#emailMess').value
-    let mobile = document.querySelector('#mobile').value
-    let message = document.querySelector('#message').value
-    let choiceOne = document.querySelector("#choiceOne").value
-    let choiceTwo = document.querySelector("#choiceTwo").value
-
     let form = new FormData
 
-    form.append('choiceOne', choiceOne)
-    form.append('choiceTwo', choiceTwo)
-    form.append('name', name)
-    form.append('firstname', firstname)
-    form.append('emailMess', email)
-    form.append('mobile', mobile)
-    form.append('message', message)
+    form.append('choiceOne', document.querySelector("#choiceOne").value)
+    form.append('choiceTwo', document.querySelector("#choiceTwo").value)
+    form.append('name', document.querySelector('#name').value)
+    form.append('firstname', document.querySelector('#firstname').value)
+    form.append('emailMess', document.querySelector('#emailMess').value)
+    form.append('mobile', document.querySelector('#mobile').value)
+    form.append('message', document.querySelector('#message').value)
 
-    fetch('api/message.php', {
+    fetch('./api/message.php', {
         method: 'POST',
         headers: new Headers(),
         body: form
@@ -75,7 +71,6 @@ const recupMess = function(){
         })
         .then((data) => {
                 for(let k in data) {
-                    console.log()
                         if (k.valueOf() === 'type') {
                             let spanValues = document.querySelectorAll('.styledInput span')
                             spanValues.forEach(function (values) {

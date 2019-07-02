@@ -20,7 +20,7 @@
 <div class="backdrop"></div>
 <div class="modal">
     <div class="headConnexion">
-        <h2>Connexion</h2>
+        <h2 id="titleConnexion">Connexion</h2>
         <i class="fas fa-times-circle closeModal" style="cursor: pointer"></i>
     </div>
     <form method="post" class="connexion" enctype="multipart/form-data">
@@ -30,6 +30,15 @@
         <input class="input" type="password" name="password" id="password">
         <p id="errors"></p>
         <button class="btn" type="submit" name="modalConnexion" id="modalConnexion">Connexion</button>
+        <p class="mdpForgot">Mot de passe oublié ?</p>
+    </form>
+    <form method="post" class="formForgot" enctype="multipart/form-data">
+        <label for="forgotPasswordEmail">Email</label>
+        <input placeholder="Adresse mail" type="email" name="forgotPasswordEmail" id="forgotPasswordEmail" value="<?= isset($forgotPasswordError) ? $_POST['forgotPasswordEmail'] : '' ?>">
+        <p id="errorsEmail" style="color: red;"></p>
+        <p id="successNewPassword" style="color: #1D7E34;"></p>
+        <button style="margin-top: 10px;" class="btn" type="submit" name="sendForgot" id="sendForgot">Envoyer</button>
+        <p id="backForm">< Retour</p>
     </form>
 </div>
 <header class="header">

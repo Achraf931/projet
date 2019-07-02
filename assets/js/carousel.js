@@ -24,3 +24,15 @@ function showSlides(n) {
     slides[slideIndex-1].style.display = "block"
     dots[slideIndex-1].className += " active"
 }
+
+document.querySelectorAll(".dot").forEach(function (e) {
+    e.addEventListener("click",function () {
+        currentSlide(-1)
+    })
+})
+document.querySelector(".prev").addEventListener("click",function () {
+    plusSlides(-1)
+})
+document.querySelector(".next").addEventListener("click",function () {
+    plusSlides(1)
+})

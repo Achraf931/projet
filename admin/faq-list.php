@@ -59,16 +59,14 @@ $faq = $query->fetchall();
                         </thead>
                         <tbody>
                         <?php if ($faq): ?>
-                            <?php foreach ($faq as $faq): ?>
+                            <?php foreach ($faq as $faqList): ?>
                                 <tr>
-                                    <td><?= htmlentities($faq['id']); ?></td>
-                                    <td><?= htmlentities($faq['question']); ?></td>
-                                    <td><?= htmlentities($faq['response']); ?></td>
+                                    <td><?= htmlentities($faqList['id']); ?></td>
+                                    <td><?= htmlentities($faqList['question']); ?></td>
+                                    <td><?= htmlentities($faqList['response']); ?></td>
                                     <td class="d-flex justify-content-center">
-                                        <a href="faq-form.php?faq_id=<?= $faq['id']; ?>&action=edit"
-                                           class="btn btn-warning mr-2">Modifier</a>
-                                        <a href="faq-list.php?faq_id=<?= $faq['id']; ?>&action=delete"
-                                           class="btn btn-danger">Supprimer</a>
+                                        <a href="faq-form.php?faq_id=<?= $faqList['id']; ?>&action=edit" class="btn btn-warning mr-2">Modifier</a>
+                                        <a href="faq-list.php?faq_id=<?= $faqList['id']; ?>&action=delete" class="btn btn-danger">Supprimer</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
